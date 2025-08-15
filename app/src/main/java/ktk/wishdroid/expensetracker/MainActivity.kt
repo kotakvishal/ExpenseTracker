@@ -3,47 +3,49 @@ package ktk.wishdroid.expensetracker
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.List
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.compose.currentBackStackEntryAsState
+import androidx.navigation.compose.rememberNavController
 import dagger.hilt.android.AndroidEntryPoint
-import ktk.wishdroid.expensetracker.ui.theme.ExpenseTrackerTheme
+import ktk.wishdroid.expensetracker.presentation.navigation.AppNavGraph
+import ktk.wishdroid.expensetracker.presentation.navigation.Screen
+import ktk.wishdroid.expensetracker.presentation.ui.components.BottomNavBar
+import ktk.wishdroid.expensetracker.presentation.ui.components.BottomNavItem
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
         setContent {
-            ExpenseTrackerTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
-                        modifier = Modifier.padding(innerPadding)
+            val navController = rememberNavController()
+            val navBackStackEntry by navController.currentBackStackEntryAsState()
+            val currentRoute = navBackStackEntry?.destination?.route
+
+            val bottomNavItems = listOf(
+                BottomNavItem(Screen.AddExpense.route, "Add", Icons.Default.Add),
+                BottomNavItem(Screen.ExpenseList.route, "List", Icons.Default.List),
+                BottomNavItem(Screen.Report.route, "Report", Icons.Default.Add)
+            )
+
+            Scaffold(
+                bottomBar = {
+                    BottomNavBar(
+                        navController,
+                        items = bottomNavItems,
                     )
+                }
+            ) { innerPadding ->
+                Box(modifier = Modifier.padding(innerPadding)) {
+                    AppNavGraph(navController)
                 }
             }
         }
-    }
-}
-
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    ExpenseTrackerTheme {
-        Greeting("Android")
     }
 }
