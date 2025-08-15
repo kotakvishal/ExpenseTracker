@@ -2,6 +2,8 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+    alias(libs.plugins.ksp)
+    alias(libs.plugins.hilt)
 }
 
 android {
@@ -40,6 +42,41 @@ android {
 }
 
 dependencies {
+    // Room components
+    implementation(libs.androidx.room.runtime)
+
+    // Room with Kotlin Extensions and Coroutines
+    implementation(libs.androidx.room.ktx)
+
+    // KSP for annotation processing
+    ksp(libs.androidx.room.compiler)
+
+    // Jetpack Compose Navigation
+    implementation(libs.androidx.navigation.compose)
+
+    // Lifecycle integration for Compose
+    implementation(libs.androidx.lifecycle.runtime.compose)
+    // ViewModel + StateFlow support
+    implementation(libs.androidx.lifecycle.viewmodel.ktx)
+
+    // Kotlin Coroutines
+    implementation(libs.kotlinx.coroutines.core)
+    implementation(libs.kotlinx.coroutines.android)
+    // Hilt DI
+    implementation(libs.hilt.android)
+    ksp(libs.hilt.compiler)
+
+    // Hilt + Navigation Compose
+    implementation(libs.androidx.hilt.navigation.compose)
+    // Serialization
+    implementation(libs.kotlinx.serialization.json)
+
+    // Image loading
+    implementation(libs.coil.compose)
+
+    // Accompanist for animations & permissions
+    implementation(libs.accompanist.permissions)
+    implementation(libs.accompanist.navigation.animation)
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
