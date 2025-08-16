@@ -20,7 +20,7 @@ import ktk.wishdroid.expensetracker.presentation.viewmodel.TransactionsViewModel
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ExpenseListScreen(
-    onAddTransactionClick: () -> Unit // 👈 callback for navigation
+    onAddTransactionClick: () -> Unit
 ) {
     val viewModel: TransactionsViewModel = hiltViewModel()
     val transactions by viewModel.transactions.collectAsState()
@@ -43,6 +43,42 @@ fun ExpenseListScreen(
                 .fillMaxSize()
                 .padding(horizontal = 16.dp)
         ) {
+            // --- Totals Row ---
+            val totalAmount = transactions.sumOf { it.amount }
+            val totalEntries = transactions.size
+
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 12.dp),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Column {
+                    Text(
+                        text = "Total Entries",
+                        style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Medium)
+                    )
+                    Text(
+                        text = "$totalEntries",
+                        style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold)
+                    )
+                }
+
+                Column {
+                    Text(
+                        text = "Total Amount",
+                        style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Medium)
+                    )
+                    Text(
+                        text = "₹$totalAmount",
+                        style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
+                        color = MaterialTheme.colorScheme.primary
+                    )
+                }
+            }
+
+            Spacer(modifier = Modifier.height(16.dp))
+
             // --- Tabs ---
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -103,6 +139,7 @@ fun ExpenseListScreen(
                 }
             }
 
+            // --- Transactions List ---
             LazyColumn(
                 modifier = Modifier.weight(1f),
                 contentPadding = PaddingValues(
@@ -150,3 +187,4 @@ fun ExpenseListScreen(
         }
     }
 }
+
