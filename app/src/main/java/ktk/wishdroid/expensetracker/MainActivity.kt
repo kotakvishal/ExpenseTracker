@@ -39,10 +39,12 @@ class MainActivity : ComponentActivity() {
 
                 Scaffold(
                     bottomBar = {
-                        BottomNavBar(
-                            navController,
-                            items = bottomNavItems,
-                        )
+                        if (currentRoute != Screen.AddExpense.route) {
+                            BottomNavBar(
+                                navController,
+                                items = bottomNavItems,
+                            )
+                        }
                     }
                 ) { innerPadding ->
                     Box(modifier = Modifier.padding(innerPadding)) {
