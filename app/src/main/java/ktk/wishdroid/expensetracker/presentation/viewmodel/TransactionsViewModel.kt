@@ -102,11 +102,12 @@ class TransactionsViewModel @Inject constructor(
             val validationResult = useCases.validateTransaction(transaction)
             if (!validationResult.successful) {
                 _eventChannel.send(UiEvent.ShowToast(validationResult.errorMessage))
-                return@launch
+            }else{
+                useCases.insertTransaction(transaction)
+                _uiState.value = AddTransactionUiState()
+                _eventChannel.send(UiEvent.TransactionAdded())
+                _eventChannel.send(UiEvent.ShowToast("Transaction added successfully"))
             }
-            useCases.insertTransaction(transaction)
-            _uiState.value = AddTransactionUiState()
-            _eventChannel.send(UiEvent.ShowToast("Transaction added successfully"))
         }
     }
 
@@ -118,5 +119,6 @@ class TransactionsViewModel @Inject constructor(
 
     sealed class UiEvent {
         class ShowToast(val message: String?) : UiEvent()
+        class TransactionAdded() : UiEvent()
     }
 }
