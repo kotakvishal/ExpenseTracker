@@ -48,19 +48,3 @@ ExpenseTracker is a modern Android application designed to help users efficientl
 ## Permissions
 
 - The app requests `WRITE_EXTERNAL_STORAGE` permission, which is used to exporting csv.
-
-
-## AI USAGE
-
-- **"I used agentic AI (Copilot GPT-4.1) to generate data classes, use cases, and ViewModels*
-Basically automating repetitive code or code requiring minimal logic, which helped speed up development and maintain consistency."*
-
-## Prompts
-- **Data Class Generation**: "Generate a data class for an expense with fields for title, amount, category, notes, and receipt image."
-- **Use Case Creation**: "Create a use case for adding an expense that validates input and interacts with the repository."
-- **ViewModel Implementation**: "Generate a ViewModel for the expense entry screen that handles state management and user interactions."
-- **UI Component Design**: "Design a reusable Jetpack Compose InputField composable in Kotlin that accepts parameters for value, onValueChange, label, placeholder, singleLine, keyboardType, maxLines, minHeight, paddingVertical, cornerRadius, borderColor, and placeholderColor. It should display a label above the text field, show placeholder text when empty, have a rounded border, support multi-line input, and use MaterialTheme colors for text, border, and cursor."
-- **CSV Export Logic**: "Implement a function to export expense data to CSV format, ensuring proper formatting and handling of special characters."
-- **Bar Chart Visualization**: "Create a bar chart composable in Jetpack Compose that displays daily expense totals for the last 7 days, using dummy data for testing."
-- 
-
