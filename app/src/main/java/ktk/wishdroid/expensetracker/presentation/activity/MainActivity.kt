@@ -1,4 +1,4 @@
-package ktk.wishdroid.expensetracker
+package ktk.wishdroid.expensetracker.presentation.activity
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -15,11 +15,12 @@ import androidx.compose.ui.res.vectorResource
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import dagger.hilt.android.AndroidEntryPoint
+import ktk.wishdroid.expensetracker.R
 import ktk.wishdroid.expensetracker.presentation.navigation.AppNavGraph
 import ktk.wishdroid.expensetracker.presentation.navigation.Screen
 import ktk.wishdroid.expensetracker.presentation.ui.components.BottomNavBar
 import ktk.wishdroid.expensetracker.presentation.ui.components.BottomNavItem
-import ktk.wishdroid.expensetracker.ui.theme.ExpenseTrackerTheme
+import ktk.wishdroid.expensetracker.presentation.ui.theme.ExpenseTrackerTheme
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -30,11 +31,12 @@ class MainActivity : ComponentActivity() {
                 val navController = rememberNavController()
                 val navBackStackEntry by navController.currentBackStackEntryAsState()
                 val currentRoute = navBackStackEntry?.destination?.route
-                val barChartIcon = ImageVector.vectorResource(id = R.drawable.ic_bar_chart)
+                val barChartIcon =
+                    ImageVector.Companion.vectorResource(id = R.drawable.ic_bar_chart)
 
                 val bottomNavItems = listOf(
                     BottomNavItem(Screen.ExpenseList.route, "List", Icons.Default.List),
-                    BottomNavItem(Screen.Report.route, "Report",barChartIcon)
+                    BottomNavItem(Screen.Report.route, "Report", barChartIcon)
                 )
 
                 Scaffold(
@@ -47,7 +49,7 @@ class MainActivity : ComponentActivity() {
                         }
                     }
                 ) { innerPadding ->
-                    Box(modifier = Modifier.padding(innerPadding)) {
+                    Box(modifier = Modifier.Companion.padding(innerPadding)) {
                         AppNavGraph(navController)
                     }
                 }

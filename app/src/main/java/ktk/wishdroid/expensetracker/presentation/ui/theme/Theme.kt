@@ -1,4 +1,4 @@
-package ktk.wishdroid.expensetracker.ui.theme
+package ktk.wishdroid.expensetracker.presentation.ui.theme
 
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme

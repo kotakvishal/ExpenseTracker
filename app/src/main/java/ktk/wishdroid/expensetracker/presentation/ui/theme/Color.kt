@@ -1,4 +1,4 @@
-package ktk.wishdroid.expensetracker.ui.theme
+package ktk.wishdroid.expensetracker.presentation.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
