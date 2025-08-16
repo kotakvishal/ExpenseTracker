@@ -30,18 +30,18 @@ fun ExpenseListScreen(
     Scaffold(
         floatingActionButton = {
             FloatingActionButton(
-                onClick = { onAddTransactionClick() }, // 👈 pass navigation event
+                onClick = { onAddTransactionClick() },
                 containerColor = MaterialTheme.colorScheme.primary
             ) {
                 Icon(Icons.Default.Add, contentDescription = "Add Transaction")
             }
         }
-    ) { paddingValues ->   // 👈 Scaffold ke padding
+    ) { paddingValues ->
 
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(horizontal = 16.dp) // sirf side padding manually
+                .padding(horizontal = 16.dp)
         ) {
             // --- Tabs ---
             Row(
@@ -107,7 +107,7 @@ fun ExpenseListScreen(
                 modifier = Modifier.weight(1f),
                 contentPadding = PaddingValues(
                     top = 0.dp,
-                    bottom = paddingValues.calculateBottomPadding() + 16.dp // 👈 bas thoda extra
+                    bottom = paddingValues.calculateBottomPadding() + 16.dp
                 )
             ) {
                 items(transactions) { transaction ->

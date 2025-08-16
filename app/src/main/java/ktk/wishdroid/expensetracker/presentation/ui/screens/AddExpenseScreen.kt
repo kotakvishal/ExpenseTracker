@@ -35,7 +35,9 @@ import ktk.wishdroid.expensetracker.presentation.viewmodel.TransactionsViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AddExpenseScreen() {
+fun AddExpenseScreen(
+    onExpenseAdded: () -> Unit
+) {
     val viewModel: TransactionsViewModel = hiltViewModel()
     val state by viewModel.uiState.collectAsState()
     val context = LocalContext.current
@@ -155,6 +157,7 @@ fun AddExpenseScreen() {
                         imageUri = receiptUri?.toString()
                     )
                 )
+                onExpenseAdded()
             },
             modifier = Modifier
                 .fillMaxWidth()
