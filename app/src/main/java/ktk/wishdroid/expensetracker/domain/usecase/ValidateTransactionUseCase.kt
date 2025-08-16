@@ -10,6 +10,11 @@ class ValidateTransactionUseCase {
         }
         if (transaction.title.isBlank()) return ValidationResult(false, "Title cannot be empty")
         if (transaction.amount <= 0) return ValidationResult(false, "Amount must be greater than 0")
+        transaction.note?.let { note ->
+            if (note.isNotBlank() && note.length > 100) {
+                return ValidationResult(false, "Note cannot exceed 100 characters")
+            }
+        }
         return ValidationResult(true)
     }
 }
