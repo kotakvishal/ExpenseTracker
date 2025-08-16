@@ -5,20 +5,19 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import ktk.wishdroid.expensetracker.presentation.ui.components.SimpleBarChart
+import ktk.wishdroid.expensetracker.presentation.viewmodel.TransactionsViewModel
 
 @Composable
-fun ReportScreen(
-    onExportClick: () -> Unit = {}
-) {
+fun ReportScreen() {
     val weeklyValues = listOf(1500f, 2200f, 1800f, 2000f, 3000f, 2500f, 2700f)
     val weeklyLabels = listOf("M","T","W","T","F","S","S")
-
+    val viewModel: TransactionsViewModel= hiltViewModel()
     val categoryData = listOf(
         "Staff" to 1500.0,
         "Travel" to 3750.0,
@@ -68,7 +67,7 @@ fun ReportScreen(
         }
 
         Button(
-            onClick = onExportClick,
+            onClick = { viewModel.exportTransactions() },
             modifier = Modifier
                 .fillMaxWidth()
                 .height(50.dp)

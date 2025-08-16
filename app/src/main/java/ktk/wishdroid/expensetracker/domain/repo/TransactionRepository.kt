@@ -8,4 +8,5 @@ interface TransactionRepository {
     suspend fun deleteTransaction(transaction: Transaction)
     fun getAllTransactions(): Flow<List<Transaction>>
     fun getTransactionById(id: Long): Flow<Transaction?>
+    suspend fun exportTransactionsToCsv(): Boolean
 }

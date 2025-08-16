@@ -28,6 +28,25 @@ class TransactionsViewModel @Inject constructor(
     private val _eventChannel = Channel<UiEvent>()
     val events = _eventChannel.receiveAsFlow()
 
+    private val _transactions = MutableStateFlow<List<Transaction>>(emptyList())
+    val transactions: StateFlow<List<Transaction>> = _transactions.asStateFlow()
+
+
+    private val _selectedTransaction = MutableStateFlow<Transaction?>(null)
+    val selectedTransaction: StateFlow<Transaction?> = _selectedTransaction.asStateFlow()
+
+    fun exportTransactions() {
+        viewModelScope.launch {
+            val result = useCases.exportExpensesUseCase()
+            println("philovishal expenses  vm rsult : $result")
+            if (result) {
+                _eventChannel.send(UiEvent.ShowToast("Transactions exported successfully"))
+            } else {
+                _eventChannel.send(UiEvent.ShowToast("Failed to export transactions"))
+            }
+        }
+    }
+
     fun onTitleChanged(newTitle: String) {
         _uiState.update { it.copy(error = "") }
         _uiState.update { it.copy(title = newTitle) }
@@ -49,13 +68,6 @@ class TransactionsViewModel @Inject constructor(
     fun toggleExpanded() {
         _uiState.update { it.copy(expanded = !it.expanded) }
     }
-
-    private val _transactions = MutableStateFlow<List<Transaction>>(emptyList())
-    val transactions: StateFlow<List<Transaction>> = _transactions.asStateFlow()
-
-
-    private val _selectedTransaction = MutableStateFlow<Transaction?>(null)
-    val selectedTransaction: StateFlow<Transaction?> = _selectedTransaction.asStateFlow()
 
     init {
         getTodayAllTransaction()

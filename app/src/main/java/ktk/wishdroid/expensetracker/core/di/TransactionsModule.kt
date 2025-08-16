@@ -29,9 +29,7 @@ object TransactionsModule {
     fun provideTransactionsDatabase(
         @ApplicationContext context: Context
     ): TransactionsDatabase = Room.databaseBuilder(
-        context,
-        TransactionsDatabase::class.java,
-        "transactions_db"
+        context, TransactionsDatabase::class.java, "transactions_db"
     ).build()
 
 
@@ -41,8 +39,10 @@ object TransactionsModule {
 
     @Provides
     @Singleton
-    fun provideTransactionsRepository(dao: TransactionsDao): TransactionRepository {
-        return TransactionRepositoryImpl(dao)
+    fun provideTransactionsRepository(
+        dao: TransactionsDao, @ApplicationContext context: Context
+    ): TransactionRepository {
+        return TransactionRepositoryImpl(dao, context)
     }
 
     @Provides
@@ -53,6 +53,7 @@ object TransactionsModule {
         getTransactionById = GetTransactionByIdUseCase(repository),
         insertTransaction = AddTransactionUseCase(repository),
         deleteTransaction = DeleteTransactionUseCase(repository),
-        validateTransaction = ValidateTransactionUseCase()
+        validateTransaction = ValidateTransactionUseCase(),
+        exportExpensesUseCase = ktk.wishdroid.expensetracker.domain.usecase.ExportExpensesUseCase(repository)
     )
 }

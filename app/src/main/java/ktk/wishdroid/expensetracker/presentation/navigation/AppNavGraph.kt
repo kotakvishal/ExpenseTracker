@@ -24,6 +24,6 @@ fun AppNavGraph(navController: NavHostController) {
                 }
             }
         }
-        composable(Screen.Report.route) { ReportScreen { } }
+        composable(Screen.Report.route) { ReportScreen() }
     }
 }

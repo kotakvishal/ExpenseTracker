@@ -7,5 +7,6 @@ data class TransactionsUseCases(
     val deleteTransaction: DeleteTransactionUseCase,
     val getTodayTransactionsUseCase: GetTodayTransactionsUseCase,
     val getTransactionsByDateRangeUseCase: GetTransactionsByDateRangeUseCase,
-    val validateTransaction: ValidateTransactionUseCase
+    val validateTransaction: ValidateTransactionUseCase,
+    val exportExpensesUseCase: ExportExpensesUseCase
 )
