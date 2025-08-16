@@ -1,12 +1,15 @@
 package ktk.wishdroid.expensetracker.presentation.ui.screens
 
 import android.widget.Toast
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
@@ -18,9 +21,11 @@ import ktk.wishdroid.expensetracker.presentation.viewmodel.TransactionsViewModel
 
 @Composable
 fun ReportScreen() {
+    // Sample weekly data
     val weeklyValues = listOf(1500f, 2200f, 1800f, 2000f, 3000f, 2500f, 2700f)
     val weeklyLabels = listOf("M","T","W","T","F","S","S")
-    val viewModel: TransactionsViewModel= hiltViewModel()
+
+    val viewModel: TransactionsViewModel = hiltViewModel()
     val categoryData = listOf(
         "Staff" to 1500.0,
         "Travel" to 3750.0,
@@ -28,8 +33,8 @@ fun ReportScreen() {
         "Utility" to 750.0
     )
 
-    val totalAmount = categoryData.sumOf { it.second }
     val context = LocalContext.current
+
     LaunchedEffect(key1 = true) {
         viewModel.events.collect { event ->
             when (event) {
@@ -41,6 +46,7 @@ fun ReportScreen() {
             }
         }
     }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -49,12 +55,44 @@ fun ReportScreen() {
     ) {
         Text("Report", style = MaterialTheme.typography.headlineMedium, fontWeight = FontWeight.Bold)
         Text("Last 7 Days", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.SemiBold)
-        Text("₹${"%,.2f".format(totalAmount)}", fontSize = 22.sp, fontWeight = FontWeight.Bold)
 
-        // Bar Chart
-        Box(modifier = Modifier
-            .fillMaxWidth()
-            .height(180.dp)
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .horizontalScroll(rememberScrollState()),
+            horizontalArrangement = Arrangement.spacedBy(16.dp)
+        ) {
+            weeklyValues.forEachIndexed { index, amount ->
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Text(
+                        text = weeklyLabels[index],
+                        fontSize = 14.sp,
+                        fontWeight = FontWeight.Medium
+                    )
+                    Text(
+                        text = "₹${"%,.0f".format(amount)}",
+                        fontSize = 12.sp,
+                        fontWeight = FontWeight.SemiBold
+                    )
+                }
+            }
+        }
+
+        // --- Total Last 7 Days ---
+        val totalAmount = weeklyValues.sum()
+        Text(
+            "Total: ₹${"%,.2f".format(totalAmount)}",
+            fontSize = 22.sp,
+            fontWeight = FontWeight.Bold
+        )
+
+        // --- Bar Chart ---
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(180.dp)
         ) {
             SimpleBarChart(
                 values = weeklyValues,
@@ -63,6 +101,7 @@ fun ReportScreen() {
             )
         }
 
+        // --- By Category ---
         Text("By Category", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.SemiBold)
 
         LazyColumn(
@@ -80,6 +119,7 @@ fun ReportScreen() {
             }
         }
 
+        // --- Export Button ---
         Button(
             onClick = { viewModel.exportTransactions() },
             modifier = Modifier
