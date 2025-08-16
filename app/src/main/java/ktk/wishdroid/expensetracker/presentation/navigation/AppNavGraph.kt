@@ -7,11 +7,12 @@ import androidx.navigation.compose.composable
 import ktk.wishdroid.expensetracker.presentation.ui.screens.AddExpenseScreen
 import ktk.wishdroid.expensetracker.presentation.ui.screens.ExpenseListScreen
 import ktk.wishdroid.expensetracker.presentation.ui.screens.ReportScreen
+import ktk.wishdroid.expensetracker.presentation.viewmodel.TransactionsViewModel
 
 @Composable
 fun AppNavGraph(navController: NavHostController) {
     NavHost(navController, startDestination = Screen.AddExpense.route) {
-        composable(Screen.AddExpense.route) { AddExpenseScreen { } }
+        composable(Screen.AddExpense.route) { AddExpenseScreen() }
         composable(Screen.ExpenseList.route) {
             ExpenseListScreen() { }
         }
