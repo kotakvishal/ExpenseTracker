@@ -21,13 +21,14 @@ import androidx.compose.ui.unit.Dp
 
 @Composable
 fun RowScope.TabItem(
+    title: String,
     label: String,
     selected: Boolean,
     onClick: () -> Unit
 ) {
     Box(
         modifier = Modifier
-            .weight(1f) // ab Row ke child ke liye valid
+            .weight(1f)
             .clip(RoundedCornerShape(16.dp))
             .background(if (selected) MaterialTheme.colorScheme.primary else Color.LightGray)
             .clickable { onClick() }
@@ -35,7 +36,7 @@ fun RowScope.TabItem(
         contentAlignment = Alignment.Center
     ) {
         Text(
-            text = label,
+            text = title,
             color = if (selected) Color.White else Color.Black,
             fontWeight = FontWeight.Bold
         )

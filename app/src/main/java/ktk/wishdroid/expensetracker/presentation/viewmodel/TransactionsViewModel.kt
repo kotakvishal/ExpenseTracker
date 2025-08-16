@@ -50,11 +50,9 @@ class TransactionsViewModel @Inject constructor(
         _uiState.update { it.copy(expanded = !it.expanded) }
     }
 
-    private val _transactionsToday = MutableStateFlow<List<Transaction>>(emptyList())
-    val transactionsToday: StateFlow<List<Transaction>> = _transactionsToday.asStateFlow()
+    private val _transactions = MutableStateFlow<List<Transaction>>(emptyList())
+    val transactions: StateFlow<List<Transaction>> = _transactions.asStateFlow()
 
-    private val _transactionsForSelectedDateRange =MutableStateFlow<List<Transaction>>(emptyList())
-    val transactionsForSelectedDateRange:StateFlow<List<Transaction>>  = _transactionsForSelectedDateRange.asStateFlow()
 
     private val _selectedTransaction = MutableStateFlow<Transaction?>(null)
     val selectedTransaction: StateFlow<Transaction?> = _selectedTransaction.asStateFlow()
@@ -66,16 +64,16 @@ class TransactionsViewModel @Inject constructor(
     fun getTodayAllTransaction() {
         viewModelScope.launch {
             useCases.getTodayTransactionsUseCase().collect { list ->
-                _transactionsToday.value = list
+                _transactions.value = list
             }
         }
     }
 
-    fun getTransactionsByDateRange(start: Date, end: Date) {
+    fun getTransactionsByDateRange(start: Long, end: Long) {
         viewModelScope.launch {
 
             useCases.getTransactionsByDateRangeUseCase(start, end).collect { list ->
-                _transactionsForSelectedDateRange.value = list
+                _transactions.value = list
             }
         }
     }

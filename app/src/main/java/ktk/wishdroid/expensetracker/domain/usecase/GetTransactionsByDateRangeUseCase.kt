@@ -9,12 +9,16 @@ import java.util.Date
 class GetTransactionsByDateRangeUseCase(
     private val repository: TransactionRepository
 ) {
-    operator fun invoke(start: Date, end: Date): Flow<List<Transaction>> {
+    operator fun invoke(start: Long, end: Long): Flow<List<Transaction>> {
+        val startDate = Date(start)
+        val endDate = Date(end)
+
         return repository.getAllTransactions().map { list ->
             list.filter {
                 val date = Date(it.timestamp)
-                !date.before(start) && !date.after(end)
+                !date.before(startDate) && !date.after(endDate)
             }
         }
     }
+
 }
