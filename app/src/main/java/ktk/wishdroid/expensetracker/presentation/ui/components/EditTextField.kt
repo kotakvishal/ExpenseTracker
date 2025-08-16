@@ -11,6 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -49,6 +50,11 @@ fun InputField(
             singleLine = singleLine,
             maxLines = maxLines,
             keyboardOptions = KeyboardOptions(keyboardType = keyboardType),
+            textStyle = MaterialTheme.typography.bodyLarge.copy(
+                color = MaterialTheme.colorScheme.onSurface,
+                fontSize = 16.sp
+            ),
+            cursorBrush = SolidColor(MaterialTheme.colorScheme.primary),
             decorationBox = { innerTextField ->
                 Box(
                     modifier = Modifier
@@ -65,7 +71,7 @@ fun InputField(
                     if (value.isEmpty()) {
                         Text(
                             text = placeholder,
-                            color = placeholderColor,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
                             fontSize = 16.sp
                         )
                     }
@@ -73,5 +79,7 @@ fun InputField(
                 }
             }
         )
+
+
     }
 }
