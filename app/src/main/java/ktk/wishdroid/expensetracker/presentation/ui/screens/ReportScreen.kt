@@ -1,11 +1,14 @@
 package ktk.wishdroid.expensetracker.presentation.ui.screens
 
+import android.widget.Toast
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -26,7 +29,18 @@ fun ReportScreen() {
     )
 
     val totalAmount = categoryData.sumOf { it.second }
-
+    val context = LocalContext.current
+    LaunchedEffect(key1 = true) {
+        viewModel.events.collect { event ->
+            when (event) {
+                is TransactionsViewModel.UiEvent.ShowToast -> {
+                    event.message?.let {
+                        Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
+                    }
+                }
+            }
+        }
+    }
     Column(
         modifier = Modifier
             .fillMaxSize()
