@@ -14,6 +14,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import ktk.wishdroid.expensetracker.domain.model.Category
 import ktk.wishdroid.expensetracker.presentation.ui.state.AddTransactionUiState
+import java.sql.Date
 import javax.inject.Inject
 
 @HiltViewModel
@@ -49,20 +50,32 @@ class TransactionsViewModel @Inject constructor(
         _uiState.update { it.copy(expanded = !it.expanded) }
     }
 
-    private val _transactions = MutableStateFlow<List<Transaction>>(emptyList())
-    val transactions: StateFlow<List<Transaction>> = _transactions.asStateFlow()
+    private val _transactionsToday = MutableStateFlow<List<Transaction>>(emptyList())
+    val transactionsToday: StateFlow<List<Transaction>> = _transactionsToday.asStateFlow()
+
+    private val _transactionsForSelectedDateRange =MutableStateFlow<List<Transaction>>(emptyList())
+    val transactionsForSelectedDateRange:StateFlow<List<Transaction>>  = _transactionsForSelectedDateRange.asStateFlow()
 
     private val _selectedTransaction = MutableStateFlow<Transaction?>(null)
     val selectedTransaction: StateFlow<Transaction?> = _selectedTransaction.asStateFlow()
 
     init {
-        getAllTransactions()
+        getTodayAllTransaction()
     }
 
-    fun getAllTransactions() {
+    fun getTodayAllTransaction() {
         viewModelScope.launch {
-            useCases.getAllTransactions().collect { list ->
-                _transactions.value = list
+            useCases.getTodayTransactionsUseCase().collect { list ->
+                _transactionsToday.value = list
+            }
+        }
+    }
+
+    fun getTransactionsByDateRange(start: Date, end: Date) {
+        viewModelScope.launch {
+
+            useCases.getTransactionsByDateRangeUseCase(start, end).collect { list ->
+                _transactionsForSelectedDateRange.value = list
             }
         }
     }

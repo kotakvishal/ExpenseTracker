@@ -23,7 +23,7 @@ fun ReportScreen(
     viewModel: TransactionsViewModel = hiltViewModel(),
     onNavigateToList: () -> Unit
 ) {
-    val total by viewModel.transactions.collectAsState()
+    val total by viewModel.transactionsToday.collectAsState()
 
     Column(
         modifier = Modifier

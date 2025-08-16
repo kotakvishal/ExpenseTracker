@@ -14,7 +14,7 @@ fun AppNavGraph(navController: NavHostController) {
     NavHost(navController, startDestination = Screen.AddExpense.route) {
         composable(Screen.AddExpense.route) { AddExpenseScreen() }
         composable(Screen.ExpenseList.route) {
-            ExpenseListScreen() { }
+            ExpenseListScreen()
         }
         composable(Screen.Report.route) { ReportScreen { } }
     }

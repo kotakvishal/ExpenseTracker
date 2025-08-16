@@ -14,8 +14,9 @@ import ktk.wishdroid.expensetracker.data.local.repo.TransactionRepositoryImpl
 import ktk.wishdroid.expensetracker.domain.repo.TransactionRepository
 import ktk.wishdroid.expensetracker.domain.usecase.AddTransactionUseCase
 import ktk.wishdroid.expensetracker.domain.usecase.DeleteTransactionUseCase
-import ktk.wishdroid.expensetracker.domain.usecase.GetAllTransactionsUseCase
+import ktk.wishdroid.expensetracker.domain.usecase.GetTodayTransactionsUseCase
 import ktk.wishdroid.expensetracker.domain.usecase.GetTransactionByIdUseCase
+import ktk.wishdroid.expensetracker.domain.usecase.GetTransactionsByDateRangeUseCase
 import ktk.wishdroid.expensetracker.domain.usecase.TransactionsUseCases
 import ktk.wishdroid.expensetracker.domain.usecase.ValidateTransactionUseCase
 import javax.inject.Singleton
@@ -47,7 +48,8 @@ object TransactionsModule {
     @Provides
     @Singleton
     fun provideTransactionUseCases(repository: TransactionRepository) = TransactionsUseCases(
-        getAllTransactions = GetAllTransactionsUseCase(repository),
+        getTodayTransactionsUseCase = GetTodayTransactionsUseCase(repository),
+        getTransactionsByDateRangeUseCase = GetTransactionsByDateRangeUseCase(repository),
         getTransactionById = GetTransactionByIdUseCase(repository),
         insertTransaction = AddTransactionUseCase(repository),
         deleteTransaction = DeleteTransactionUseCase(repository),
