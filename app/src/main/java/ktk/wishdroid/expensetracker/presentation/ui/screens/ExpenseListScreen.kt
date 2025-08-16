@@ -43,43 +43,8 @@ fun ExpenseListScreen(
                 .fillMaxSize()
                 .padding(horizontal = 16.dp)
         ) {
-            // --- Totals Row ---
-            val totalAmount = transactions.sumOf { it.amount }
-            val totalEntries = transactions.size
-
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 12.dp),
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                Column {
-                    Text(
-                        text = "Total Entries",
-                        style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Medium)
-                    )
-                    Text(
-                        text = "$totalEntries",
-                        style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold)
-                    )
-                }
-
-                Column {
-                    Text(
-                        text = "Total Amount",
-                        style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Medium)
-                    )
-                    Text(
-                        text = "₹$totalAmount",
-                        style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
-                        color = MaterialTheme.colorScheme.primary
-                    )
-                }
-            }
-
+            // --- Tabs (always visible) ---
             Spacer(modifier = Modifier.height(16.dp))
-
-            // --- Tabs ---
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(12.dp)
@@ -139,52 +104,118 @@ fun ExpenseListScreen(
                 }
             }
 
-            // --- Transactions List ---
-            LazyColumn(
-                modifier = Modifier.weight(1f),
-                contentPadding = PaddingValues(
-                    top = 0.dp,
-                    bottom = paddingValues.calculateBottomPadding() + 16.dp
-                )
-            ) {
-                items(transactions) { transaction ->
-                    Column {
-                        HorizontalDivider(thickness = 0.5.dp, color = Color.LightGray)
+            if (transactions.isEmpty()) {
+                val emptyMessage = if (selectedTab == "today") {
+                    "No transactions yet!"
+                } else {
+                    "No transactions found for the selected date range."
+                }
 
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(vertical = 12.dp, horizontal = 4.dp),
-                            horizontalArrangement = Arrangement.SpaceBetween,
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Column {
-                                Text(
-                                    text = transaction.title,
-                                    fontSize = 18.sp,
-                                    fontWeight = FontWeight.Medium
-                                )
-                                Spacer(modifier = Modifier.height(4.dp))
-                                Text(
-                                    text = transaction.category.displayName,
-                                    fontSize = 16.sp,
-                                    fontWeight = FontWeight.Light
-                                )
-                            }
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(bottom = paddingValues.calculateBottomPadding()),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Text(
+                            text = emptyMessage,
+                            style = MaterialTheme.typography.titleMedium,
+                            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f)
+                        )
+                        Spacer(modifier = Modifier.height(8.dp))
+                        if (selectedTab == "today") {
                             Text(
-                                text = "₹${transaction.amount}",
-                                fontSize = 16.sp,
-                                fontWeight = FontWeight.Bold,
-                                color = MaterialTheme.colorScheme.primary
+                                text = "Tap the + button to add your first transaction.",
+                                style = MaterialTheme.typography.bodyMedium,
+                                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f)
                             )
                         }
+                    }
+                }
+            } else {
+                // Totals row
+                val totalAmount = transactions.sumOf { it.amount }
+                val totalEntries = transactions.size
 
-                        HorizontalDivider(thickness = 0.5.dp, color = Color.LightGray)
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 12.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Column {
+                        Text(
+                            text = "Total Entries",
+                            style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Medium)
+                        )
+                        Text(
+                            text = "$totalEntries",
+                            style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold)
+                        )
+                    }
+
+                    Column {
+                        Text(
+                            text = "Total Amount",
+                            style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Medium)
+                        )
+                        Text(
+                            text = "₹$totalAmount",
+                            style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
+                            color = MaterialTheme.colorScheme.primary
+                        )
+                    }
+                }
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                LazyColumn(
+                    modifier = Modifier.weight(1f),
+                    contentPadding = PaddingValues(
+                        top = 0.dp,
+                        bottom = paddingValues.calculateBottomPadding() + 16.dp
+                    )
+                ) {
+                    items(transactions) { transaction ->
+                        Column {
+                            Divider(thickness = 0.5.dp, color = Color.LightGray)
+
+                            Row(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(vertical = 12.dp, horizontal = 4.dp),
+                                horizontalArrangement = Arrangement.SpaceBetween,
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Column {
+                                    Text(
+                                        text = transaction.title,
+                                        fontSize = 18.sp,
+                                        fontWeight = FontWeight.Medium
+                                    )
+                                    Spacer(modifier = Modifier.height(4.dp))
+                                    Text(
+                                        text = transaction.category.displayName,
+                                        fontSize = 16.sp,
+                                        fontWeight = FontWeight.Light
+                                    )
+                                }
+                                Text(
+                                    text = "₹${transaction.amount}",
+                                    fontSize = 16.sp,
+                                    fontWeight = FontWeight.Bold,
+                                    color = MaterialTheme.colorScheme.primary
+                                )
+                            }
+
+                            Divider(thickness = 0.5.dp, color = Color.LightGray)
+                        }
                     }
                 }
             }
-
         }
     }
 }
-
