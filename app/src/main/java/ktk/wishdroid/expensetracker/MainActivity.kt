@@ -31,7 +31,6 @@ class MainActivity : ComponentActivity() {
                 val currentRoute = navBackStackEntry?.destination?.route
 
                 val bottomNavItems = listOf(
-                    BottomNavItem(Screen.AddExpense.route, "Add", Icons.Default.Add),
                     BottomNavItem(Screen.ExpenseList.route, "List", Icons.Default.List),
                     BottomNavItem(Screen.Report.route, "Report", Icons.Default.Add)
                 )

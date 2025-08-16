@@ -11,10 +11,15 @@ import ktk.wishdroid.expensetracker.presentation.viewmodel.TransactionsViewModel
 
 @Composable
 fun AppNavGraph(navController: NavHostController) {
-    NavHost(navController, startDestination = Screen.AddExpense.route) {
+    NavHost(navController, startDestination = Screen.ExpenseList.route) {
         composable(Screen.AddExpense.route) { AddExpenseScreen() }
         composable(Screen.ExpenseList.route) {
-            ExpenseListScreen()
+            ExpenseListScreen(){
+                navController.navigate(Screen.AddExpense.route) {
+                    launchSingleTop = true
+                    restoreState = true
+                }
+            }
         }
         composable(Screen.Report.route) { ReportScreen { } }
     }
