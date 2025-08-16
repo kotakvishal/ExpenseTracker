@@ -1,22 +1,24 @@
 package ktk.wishdroid.expensetracker.presentation.ui.screens
 
+import android.net.Uri
 import android.widget.Toast
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
@@ -24,6 +26,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import coil.compose.rememberAsyncImagePainter
 import ktk.wishdroid.expensetracker.R
 import ktk.wishdroid.expensetracker.domain.model.Transaction
 import ktk.wishdroid.expensetracker.presentation.ui.components.CategoryDropdownField
@@ -36,6 +39,14 @@ fun AddExpenseScreen() {
     val viewModel: TransactionsViewModel = hiltViewModel()
     val state by viewModel.uiState.collectAsState()
     val context = LocalContext.current
+
+    var receiptUri by remember { mutableStateOf<Uri?>(null) }
+
+    val launcher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.GetContent()
+    ) { uri: Uri? ->
+        receiptUri = uri
+    }
 
     LaunchedEffect(key1 = true) {
         viewModel.events.collect { event ->
@@ -63,7 +74,7 @@ fun AddExpenseScreen() {
             fontWeight = FontWeight.Bold,
             modifier = Modifier.fillMaxWidth(),
             fontSize = 24.sp,
-            )
+        )
         Spacer(modifier = Modifier.height(16.dp))
 
         Text(
@@ -111,26 +122,40 @@ fun AddExpenseScreen() {
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(100.dp)
+                .height(150.dp)
                 .background(Color(0xFFE0E0E0), RoundedCornerShape(8.dp))
-                .border(1.dp, MaterialTheme.colorScheme.outline, RoundedCornerShape(8.dp)),
+                .border(1.dp, MaterialTheme.colorScheme.outline, RoundedCornerShape(8.dp))
+                .clickable { launcher.launch("image/*") },
             contentAlignment = Alignment.Center
         ) {
-            Text(
-                "Receipt image",
-                color = MaterialTheme.colorScheme.onSurface,
-                textAlign = TextAlign.Center
-            )
+            if (receiptUri != null) {
+                Image(
+                    painter = rememberAsyncImagePainter(receiptUri),
+                    contentDescription = "Receipt",
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier.fillMaxSize()
+                )
+            } else {
+                Text(
+                    "Tap to select receipt image",
+                    color = MaterialTheme.colorScheme.onSurface,
+                    textAlign = TextAlign.Center
+                )
+            }
         }
 
         Button(
-            onClick = { viewModel.addTransaction(Transaction(
-                title = state.title,
-                amount = state.amount.toDoubleOrNull() ?: 0.0,
-                category = state.category,
-                note = state.notes.takeIf { it.isNotBlank() },
-                imageUri = null
-            )) },
+            onClick = {
+                viewModel.addTransaction(
+                    Transaction(
+                        title = state.title,
+                        amount = state.amount.toDoubleOrNull() ?: 0.0,
+                        category = state.category,
+                        note = state.notes.takeIf { it.isNotBlank() },
+                        imageUri = receiptUri?.toString()
+                    )
+                )
+            },
             modifier = Modifier
                 .fillMaxWidth()
                 .height(50.dp),
