@@ -38,7 +38,6 @@ class TransactionsViewModel @Inject constructor(
     fun exportTransactions() {
         viewModelScope.launch {
             val result = useCases.exportExpensesUseCase()
-            println("philovishal expenses  vm rsult : $result")
             if (result) {
                 _eventChannel.send(UiEvent.ShowToast("Transactions exported successfully"))
             } else {

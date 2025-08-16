@@ -73,7 +73,6 @@ class TransactionRepositoryImpl @Inject constructor(
                 file.writeText(csv)
             }
 
-            println("philovishal expenses impl true")
             true
         } catch (e: Exception) {
             e.printStackTrace()
