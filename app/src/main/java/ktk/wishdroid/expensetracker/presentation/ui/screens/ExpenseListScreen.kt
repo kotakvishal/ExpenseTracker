@@ -53,7 +53,6 @@ fun ExpenseListScreen(
                     viewModel.getTodayAllTransaction()
                 }
                 TabItem(title = "Select Range", label = "select_range", selectedTab == "select_range") {
-                    selectedTab = "select_range"
                     showDateRangePicker = true
                 }
             }
@@ -69,6 +68,7 @@ fun ExpenseListScreen(
                     confirmButton = {
                         TextButton(onClick = {
                             showDateRangePicker = false
+                            selectedTab = "select_range"
                             val start = dateRangePickerState.selectedStartDateMillis
                             val end = dateRangePickerState.selectedEndDateMillis
                             if (start != null && end != null) {
