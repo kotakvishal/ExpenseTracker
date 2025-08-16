@@ -23,10 +23,12 @@ class TransactionsViewModel @Inject constructor(
     val uiState: StateFlow<AddTransactionUiState> = _uiState.asStateFlow()
 
     fun onTitleChanged(newTitle: String) {
+        _uiState.update { it.copy(error = "") }
         _uiState.update { it.copy(title = newTitle) }
     }
 
     fun onAmountChanged(newAmount: String) {
+        _uiState.update { it.copy(error = "") }
         _uiState.update { it.copy(amount = newAmount) }
     }
 
@@ -69,6 +71,11 @@ class TransactionsViewModel @Inject constructor(
     }
 
     fun addTransaction(transaction: Transaction) {
+        val validationResult = useCases.validateTransaction(transaction)
+        if (!validationResult.successful) {
+            _uiState.update { it.copy(error = validationResult.errorMessage) }
+            return
+        }
         viewModelScope.launch {
             useCases.insertTransaction(transaction)
         }

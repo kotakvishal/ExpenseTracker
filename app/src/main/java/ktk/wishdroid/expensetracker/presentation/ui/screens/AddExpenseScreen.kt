@@ -86,6 +86,15 @@ fun AddExpenseScreen() {
             modifier = Modifier.fillMaxWidth()
         )
 
+        if (!state.error.isNullOrEmpty()) {
+            Text(
+                text = state.error ?: "",
+                color = Color.Red,
+                style = MaterialTheme.typography.bodyMedium,
+                modifier = Modifier.fillMaxWidth()
+            )
+        }
+
         Box(
             modifier = Modifier
                 .fillMaxWidth()
