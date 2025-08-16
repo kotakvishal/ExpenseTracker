@@ -1,10 +1,13 @@
 package ktk.wishdroid.expensetracker.presentation.ui.screens
 
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material3.*
@@ -12,6 +15,8 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
@@ -20,7 +25,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import ktk.wishdroid.expensetracker.R
-import ktk.wishdroid.expensetracker.domain.model.Category
 import ktk.wishdroid.expensetracker.domain.model.Transaction
 import ktk.wishdroid.expensetracker.presentation.ui.components.CategoryDropdownField
 import ktk.wishdroid.expensetracker.presentation.ui.components.InputField
@@ -31,11 +35,25 @@ import ktk.wishdroid.expensetracker.presentation.viewmodel.TransactionsViewModel
 fun AddExpenseScreen() {
     val viewModel: TransactionsViewModel = hiltViewModel()
     val state by viewModel.uiState.collectAsState()
+    val context = LocalContext.current
+
+    LaunchedEffect(key1 = true) {
+        viewModel.events.collect { event ->
+            when (event) {
+                is TransactionsViewModel.UiEvent.ShowToast -> {
+                    event.message?.let {
+                        Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
+                    }
+                }
+            }
+        }
+    }
 
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(20.dp),
+            .padding(20.dp)
+            .verticalScroll(rememberScrollState()),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         Text(
@@ -43,13 +61,16 @@ fun AddExpenseScreen() {
             style = MaterialTheme.typography.headlineMedium,
             textAlign = TextAlign.Center,
             fontWeight = FontWeight.Bold,
-            modifier = Modifier.fillMaxWidth()
-        )
+            modifier = Modifier.fillMaxWidth(),
+            fontSize = 24.sp,
+            )
+        Spacer(modifier = Modifier.height(16.dp))
 
         Text(
             text = "Add Expense",
             style = MaterialTheme.typography.headlineSmall,
-            fontWeight = FontWeight.SemiBold
+            fontWeight = FontWeight.SemiBold,
+            fontSize = 18.sp,
         )
 
         InputField(
@@ -83,30 +104,24 @@ fun AddExpenseScreen() {
             placeholder = "Add extra details",
             singleLine = false,
             maxLines = 3,
+            minHeight = 100.dp,
             modifier = Modifier.fillMaxWidth()
         )
-
-        if (!state.error.isNullOrEmpty()) {
-            Text(
-                text = state.error ?: "",
-                color = Color.Red,
-                style = MaterialTheme.typography.bodyMedium,
-                modifier = Modifier.fillMaxWidth()
-            )
-        }
 
         Box(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(100.dp)
-                .background(Color(0xFFF5F5F5), RoundedCornerShape(8.dp))
-                .border(1.dp, Color.LightGray, RoundedCornerShape(8.dp)),
+                .background(Color(0xFFE0E0E0), RoundedCornerShape(8.dp))
+                .border(1.dp, MaterialTheme.colorScheme.outline, RoundedCornerShape(8.dp)),
             contentAlignment = Alignment.Center
         ) {
-            Text("Receipt image", color = Color.Gray, textAlign = TextAlign.Center)
+            Text(
+                "Receipt image",
+                color = MaterialTheme.colorScheme.onSurface,
+                textAlign = TextAlign.Center
+            )
         }
-
-        Spacer(modifier = Modifier.weight(1f))
 
         Button(
             onClick = { viewModel.addTransaction(Transaction(

@@ -5,9 +5,11 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import ktk.wishdroid.expensetracker.domain.model.Transaction
 import ktk.wishdroid.expensetracker.domain.usecase.TransactionsUseCases
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import ktk.wishdroid.expensetracker.domain.model.Category
@@ -21,6 +23,9 @@ class TransactionsViewModel @Inject constructor(
 
     private val _uiState = MutableStateFlow(AddTransactionUiState())
     val uiState: StateFlow<AddTransactionUiState> = _uiState.asStateFlow()
+
+    private val _eventChannel = Channel<UiEvent>()
+    val events = _eventChannel.receiveAsFlow()
 
     fun onTitleChanged(newTitle: String) {
         _uiState.update { it.copy(error = "") }
@@ -71,13 +76,15 @@ class TransactionsViewModel @Inject constructor(
     }
 
     fun addTransaction(transaction: Transaction) {
-        val validationResult = useCases.validateTransaction(transaction)
-        if (!validationResult.successful) {
-            _uiState.update { it.copy(error = validationResult.errorMessage) }
-            return
-        }
         viewModelScope.launch {
+            val validationResult = useCases.validateTransaction(transaction)
+            if (!validationResult.successful) {
+                _eventChannel.send(UiEvent.ShowToast(validationResult.errorMessage))
+                return@launch
+            }
             useCases.insertTransaction(transaction)
+            _uiState.value = AddTransactionUiState()
+            _eventChannel.send(UiEvent.ShowToast("Transaction added successfully"))
         }
     }
 
@@ -85,5 +92,9 @@ class TransactionsViewModel @Inject constructor(
         viewModelScope.launch {
             useCases.deleteTransaction(transaction)
         }
+    }
+
+    sealed class UiEvent {
+        class ShowToast(val message: String?) : UiEvent()
     }
 }

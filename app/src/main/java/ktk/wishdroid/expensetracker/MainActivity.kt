@@ -18,32 +18,35 @@ import ktk.wishdroid.expensetracker.presentation.navigation.AppNavGraph
 import ktk.wishdroid.expensetracker.presentation.navigation.Screen
 import ktk.wishdroid.expensetracker.presentation.ui.components.BottomNavBar
 import ktk.wishdroid.expensetracker.presentation.ui.components.BottomNavItem
+import ktk.wishdroid.expensetracker.ui.theme.ExpenseTrackerTheme
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            val navController = rememberNavController()
-            val navBackStackEntry by navController.currentBackStackEntryAsState()
-            val currentRoute = navBackStackEntry?.destination?.route
+            ExpenseTrackerTheme {
+                val navController = rememberNavController()
+                val navBackStackEntry by navController.currentBackStackEntryAsState()
+                val currentRoute = navBackStackEntry?.destination?.route
 
-            val bottomNavItems = listOf(
-                BottomNavItem(Screen.AddExpense.route, "Add", Icons.Default.Add),
-                BottomNavItem(Screen.ExpenseList.route, "List", Icons.Default.List),
-                BottomNavItem(Screen.Report.route, "Report", Icons.Default.Add)
-            )
+                val bottomNavItems = listOf(
+                    BottomNavItem(Screen.AddExpense.route, "Add", Icons.Default.Add),
+                    BottomNavItem(Screen.ExpenseList.route, "List", Icons.Default.List),
+                    BottomNavItem(Screen.Report.route, "Report", Icons.Default.Add)
+                )
 
-            Scaffold(
-                bottomBar = {
-                    BottomNavBar(
-                        navController,
-                        items = bottomNavItems,
-                    )
-                }
-            ) { innerPadding ->
-                Box(modifier = Modifier.padding(innerPadding)) {
-                    AppNavGraph(navController)
+                Scaffold(
+                    bottomBar = {
+                        BottomNavBar(
+                            navController,
+                            items = bottomNavItems,
+                        )
+                    }
+                ) { innerPadding ->
+                    Box(modifier = Modifier.padding(innerPadding)) {
+                        AppNavGraph(navController)
+                    }
                 }
             }
         }
