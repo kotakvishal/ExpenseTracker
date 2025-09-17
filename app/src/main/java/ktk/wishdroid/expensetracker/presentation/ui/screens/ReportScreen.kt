@@ -43,10 +43,6 @@ fun ReportScreen() {
                         Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
                     }
                 }
-
-                is TransactionsViewModel.UiEvent.TransactionAdded -> {
-                    //Note for reviewer: This wont be called (we can separate events class for report screen but as it is a small app we can use same for both.)
-                }
             }
         }
     }

@@ -58,10 +58,6 @@ fun AddExpenseScreen(
                         Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
                     }
                 }
-
-                is TransactionsViewModel.UiEvent.TransactionAdded -> {
-                    onExpenseAdded
-                }
             }
         }
     }
@@ -168,6 +164,7 @@ fun AddExpenseScreen(
                         imageUri = receiptUri?.toString()
                     )
                 )
+                onExpenseAdded()
             },
             modifier = Modifier
                 .fillMaxWidth()
