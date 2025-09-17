@@ -14,7 +14,6 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import ktk.wishdroid.expensetracker.domain.model.Category
 import ktk.wishdroid.expensetracker.presentation.ui.state.AddTransactionUiState
-import java.sql.Date
 import javax.inject.Inject
 
 @HiltViewModel
@@ -97,7 +96,7 @@ class TransactionsViewModel @Inject constructor(
         }
     }
 
-    fun addTransaction(transaction: Transaction) {
+    fun addTransaction(transaction: Transaction, onExpenseAdded: () -> Unit) {
         viewModelScope.launch {
             val validationResult = useCases.validateTransaction(transaction)
             if (!validationResult.successful) {
@@ -106,6 +105,7 @@ class TransactionsViewModel @Inject constructor(
             }
             useCases.insertTransaction(transaction)
             _uiState.value = AddTransactionUiState()
+            onExpenseAdded()
             _eventChannel.send(UiEvent.ShowToast("Transaction added successfully"))
         }
     }

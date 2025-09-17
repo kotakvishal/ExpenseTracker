@@ -16,7 +16,6 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -126,13 +125,10 @@ fun AddExpenseScreen(
                 .fillMaxWidth()
                 .height(150.dp)
                 .background(
-                    color = MaterialTheme.colorScheme.surface,
-                    shape = RoundedCornerShape(8.dp)
+                    color = MaterialTheme.colorScheme.surface, shape = RoundedCornerShape(8.dp)
                 )
                 .border(
-                    1.dp,
-                    MaterialTheme.colorScheme.outline,
-                    RoundedCornerShape(8.dp)
+                    1.dp, MaterialTheme.colorScheme.outline, RoundedCornerShape(8.dp)
                 )
                 .clickable { launcher.launch("image/*") },
             contentAlignment = Alignment.Center
@@ -162,14 +158,11 @@ fun AddExpenseScreen(
                         category = state.category,
                         note = state.notes.takeIf { it.isNotBlank() },
                         imageUri = receiptUri?.toString()
-                    )
-                )
-                onExpenseAdded()
-            },
-            modifier = Modifier
+                    ), { onExpenseAdded() })
+
+            }, modifier = Modifier
                 .fillMaxWidth()
-                .height(50.dp),
-            shape = RoundedCornerShape(8.dp)
+                .height(50.dp), shape = RoundedCornerShape(8.dp)
         ) {
             Text("Add Expense")
         }
