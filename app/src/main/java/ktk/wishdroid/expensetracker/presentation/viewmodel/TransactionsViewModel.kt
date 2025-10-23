@@ -34,6 +34,23 @@ class TransactionsViewModel @Inject constructor(
     private val _selectedTransaction = MutableStateFlow<Transaction?>(null)
     val selectedTransaction: StateFlow<Transaction?> = _selectedTransaction.asStateFlow()
 
+    private val _weeklyReport = MutableStateFlow<List<Float>>(emptyList())
+    val weeklyReport: StateFlow<List<Float>> = _weeklyReport.asStateFlow()
+
+    private val _categoryReport = MutableStateFlow<List<Pair<String, Double>>>(emptyList())
+    val categoryReport: StateFlow<List<Pair<String, Double>>> = _categoryReport.asStateFlow()
+
+    init {
+        getTodayAllTransaction()
+
+        viewModelScope.launch {
+            _transactions.collect { list ->
+                computeWeeklyReport(list)
+                computeCategoryReport(list)
+            }
+        }
+    }
+
     fun exportTransactions() {
         viewModelScope.launch {
             val result = useCases.exportExpensesUseCase()
@@ -115,7 +132,31 @@ class TransactionsViewModel @Inject constructor(
             useCases.deleteTransaction(transaction)
         }
     }
+    private fun computeWeeklyReport(transactions: List<Transaction>) {
+        val calendar = java.util.Calendar.getInstance()
+        val now = calendar.timeInMillis
+        val dayMillis = 24 * 60 * 60 * 1000L
 
+        val dailyTotals = (0..6).map { i ->
+            val start = now - ((6 - i) * dayMillis)
+            val end = start + dayMillis
+            transactions
+                .filter { it.timestamp in start..end }
+                .sumOf { it.amount }
+                .toFloat()
+        }
+        _weeklyReport.value = dailyTotals
+    }
+
+    private fun computeCategoryReport(transactions: List<Transaction>) {
+        val map = transactions
+            .groupBy { it.category.name }
+            .mapValues { entry ->
+                entry.value.sumOf { it.amount }
+            }
+
+        _categoryReport.value = map.entries.map { it.key to it.value }
+    }
     sealed class UiEvent {
         class ShowToast(val message: String?) : UiEvent()
     }
