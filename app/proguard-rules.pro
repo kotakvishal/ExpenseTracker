@@ -19,3 +19,21 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
+# Keep essential classes
+-keep class ktk.vishdroid.aimatlas.** { *; }
+
+# Keep classes required for Firebase
+-keep class com.google.firebase.** { *; }
+
+# Keep annotations
+-keep @interface com.example.annotations.** { *; }
+
+# Shrink unused resources
+-dontwarn android.**
+-dontwarn com.google.firebase.**
+
+# Strip unused code
+-assumenosideeffects class android.util.Log {
+    public static *** d(...);
+    public static *** v(...);
+}
