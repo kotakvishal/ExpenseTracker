@@ -8,7 +8,7 @@ ExpenseTracker is a modern Android application designed to help users efficientl
 - Add expense with:
     - Title
     - Amount (₹)
-    - Category (Staff, Travel, Food, Utility)
+    - Category (Travel, Food, Utility, MISC)
     - Optional notes (max 100 chars)
     - Optional receipt image
 - Shows real-time **Total Spent Today**

@@ -6,7 +6,7 @@ data class AddTransactionUiState(
     val title: String = "",
     val amount: String = "",
     val notes: String = "",
-    val category: Category = Category.STAFF,
+    val category: Category = Category.FOOD,
     val expanded: Boolean = false,
     val isSaving: Boolean = false,
     val error: String? = null
